@@ -15,20 +15,24 @@ broker.on('published', function (packet, client) {
 
 broker.on('ready', setup)
 
+
 function setup() {
   console.log('broker is up and running')
 }
 
 
+setInterval(function () {
 // observe
 
-// var message = {
-//   topic: '/hello/world',
-//   payload: 'abcde', // or a Buffer
-//   qos: 0, // 0, 1, or 2
-//   retain: false // or true
-// };
+  var message = {
+    topic: '/topic',
+    payload: 'abcde', // or a Buffer
+    qos: 0, // 0, 1, or 2
+    retain: false // or true
+  }
 
-// server.publish(message, function() {
-//   console.log('done!');
-// });
+  broker.publish(message, function() {
+    console.log('done!')
+  })
+
+}, 5000)
