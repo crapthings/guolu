@@ -20,19 +20,23 @@ function setup() {
   console.log('broker is up and running')
 }
 
+Meteor.startup(function () {
 
-setInterval(function () {
-// observe
+  Nodes.find().observe({
+    changed(current, prev) {
+      if (current.toggle === prev.toggle) return
 
-  var message = {
-    topic: '/topic',
-    payload: 'abcde', // or a Buffer
-    qos: 0, // 0, 1, or 2
-    retain: false // or true
-  }
+      const message = {
+        topic: '/topic',
+        payload: `${current.pin},${current.toggle ? 1 : 0}`,
+        qos: 0, // 0, 1, or 2
+        retain: false // or true
+      }
 
-  broker.publish(message, function() {
-    console.log('done!')
+      broker.publish(message, function() {
+        console.log(message, 'sent')
+      })
+    }
   })
 
-}, 5000)
+})
