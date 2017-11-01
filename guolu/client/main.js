@@ -22,7 +22,7 @@ class App extends Component {
     return <div>
       {nodes.map((node, idx) => <button
         key={idx}
-        style={{ width: '100%', padding: '16px' }}
+        style={{ width: '100%', padding: '16px', fontSize: '18px' }}
         onClick={this.toggleNode(node)}
       >
         {node.pin + 1} {node.toggle ? 'on' : 'off'}
