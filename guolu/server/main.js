@@ -14,28 +14,25 @@ broker.on('published', function (packet, client) {
 
 broker.on('ready', setup)
 
-
 function setup() {
   console.log('broker is up and running')
 }
 
-Meteor.startup(function () {
+Meteor.methods({
+  toggleNode(_id) {
+    const { client, pin, toggle } = Nodes.findOne(_id)
 
-  Nodes.find().observe({
-    changed(current, prev) {
-      if (current.toggle === prev.toggle) return
-
-      const message = {
-        topic: '/topic',
-        payload: `${current.pin},${current.toggle ? 1 : 0}`,
-        qos: 0, // 0, 1, or 2
-        retain: false // or true
-      }
-
-      broker.publish(message, function() {
-        console.log(message, 'sent')
-      })
+    const message = {
+      topic: `/${client}`,
+      payload: `${pin},${toggle ? 1 : 0}`,
+      qos: 0, // 0, 1, or 2
+      retain: false // or true
     }
-  })
 
+    broker.publish(message, Meteor.bindEnvironment(function() {
+      Nodes.update(_id, {
+        $set: { toggle: !toggle }
+      })
+    }))
+  }
 })
