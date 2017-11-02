@@ -22,6 +22,7 @@ if (file.exists('wifi.cfg')) then
       end,
       function(client, reason)
         print('failed reason: ' .. reason)
+        dofile('init.lua')
       end)
     end
   end)
